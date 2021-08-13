@@ -78,6 +78,7 @@ class AllTasks(TaskSequence):
             load the /login page
             fails if already logged on (redirects to /home)
             """
+            self.client.verify = False
             with self.client.get("/login", catch_response=True) as response:
                 for r_hist in response.history:
                     if r_hist.status_code > 200 and r_hist.status_code < 400:
@@ -89,6 +90,7 @@ class AllTasks(TaskSequence):
             load the /signup page
             fails if not logged on (redirects to /home)
             """
+            self.client.verify = False
             with self.client.get("/signup", catch_response=True) as response:
                 for r_hist in response.history:
                     if r_hist.status_code > 200 and r_hist.status_code < 400:
@@ -118,6 +120,7 @@ class AllTasks(TaskSequence):
             on start, deposit a large balance into each account
             to ensure all payments are covered
             """
+            self.client.verify = False
             self.deposit(1000000)
 
         @task(10)
@@ -126,6 +129,7 @@ class AllTasks(TaskSequence):
             load the / page
             fails if not logged on (redirects to /login)
             """
+            self.client.verify = False
             with self.client.get("/", catch_response=True) as response:
                 for r_hist in response.history:
                     if r_hist.status_code > 200 and r_hist.status_code < 400:
@@ -137,6 +141,7 @@ class AllTasks(TaskSequence):
             load the /home page (identical to /)
             fails if not logged on (redirects to /login)
             """
+            self.client.verify = False
             with self.client.get("/home", catch_response=True) as response:
                 for r_hist in response.history:
                     if r_hist.status_code > 200 and r_hist.status_code < 400:
@@ -147,6 +152,7 @@ class AllTasks(TaskSequence):
             """
             POST to /payment, sending money to other account
             """
+            self.client.verify = False
             if amount is None:
                 amount = random() * 1000
             transaction = {"account_num": choice(TRANSACTION_ACCT_LIST),
@@ -163,6 +169,7 @@ class AllTasks(TaskSequence):
             """
             POST to /deposit, depositing external money into account
             """
+            self.client.verify = False
             if amount is None:
                 amount = random() * 1000
             acct_info = {"account_num": choice(TRANSACTION_ACCT_LIST),
@@ -182,6 +189,7 @@ class AllTasks(TaskSequence):
             sends POST request to /login with stored credentials
             succeeds if a token was returned
             """
+            self.client.verify = False
             with self.client.post("/login", {"username":self.locust.username,
                                              "password":MASTER_PASSWORD},
                                   catch_response=True) as response:
@@ -200,6 +208,7 @@ class AllTasks(TaskSequence):
             fails if not logged in
             exits AuthenticatedTasks
             """
+            self.client.verify = False
             self.client.post("/logout")
             self.locust.username = None
             # go to UnauthenticatedTasks
